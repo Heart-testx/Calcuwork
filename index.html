@@ -2,21 +2,25 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เงินเดือนจะได้เท่าไหร่น้อ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>เดือนนี้จะได้เท่าไหร่น้อ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #8B4513; /* Saddle Brown */
-            --secondary-color: #D2B48C; /* Tan */
-            --background-color: #F5DEB3; /* Wheat */
+            --primary-color: #7B523B; /* Slightly softer brown */
+            --background-color: #F8F5EF; /* Very light cream */
             --card-background: #FFFFFF;
-            --text-color: #4F4F4F; /* Dim Gray */
-            --border-color: #B08D57; /* Dark Goldenrod */
-            --button-hover: #A0522D; /* Sienna */
-            --result-bg: #FFF8DC; /* Cornsilk */
-            --result-border: #CD853F; /* Peru */
-            --error-color: #DC3545; /* Red */
+            --text-color: #4A4A4A;
+            --border-color: #E0D7CC; /* Subtle border */
+            --button-bg: #8B4513; /* Saddle Brown */
+            --button-active-bg: #6B3A0D; /* Darker for active state */
+            --result-bg: #FFFBF5; /* Creamy white for results */
+            --result-border: #D19A61; /* Golden brown for accent */
+            --error-color: #D9534F;
+            --placeholder-color: #C0C0C0;
+            --reset-button-color: #A6A6A6; /* Gray for reset */
+            --reset-button-hover: #8C8C8C;
+            --detail-text-color: #6C757D; /* Muted gray for detail lines */
         }
 
         body {
@@ -26,22 +30,26 @@
             color: var(--text-color);
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* จัดให้อยู่ด้านบนเมื่อจอเล็ก */
+            align-items: flex-start; /* Start at top for mobile */
             min-height: 100vh;
             margin: 0;
-            box-sizing: border-box; /* ให้ padding ไม่ดันเกินจอ */
+            box-sizing: border-box;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
         }
         .container {
             background-color: var(--card-background);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            max-width: 400px; /* จำกัดความกว้างให้เหมาะกับมือถือ */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            max-width: 380px;
             width: 100%;
-            animation: fadeIn 0.6s ease-out;
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            z-index: 1;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         h2 {
@@ -49,186 +57,263 @@
             color: var(--primary-color);
             margin-bottom: 25px;
             font-weight: 600;
-            font-size: 1.8em; /* ขนาดใหญ่ขึ้นสำหรับมือถือ */
+            font-size: 1.7em;
+            letter-spacing: -0.5px;
+            position: relative;
         }
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 400;
+            margin-bottom: 6px;
+            font-weight: 500;
             color: var(--text-color);
-            font-size: 1em;
+            font-size: 0.95em;
         }
         input[type="number"] {
-            width: calc(100% - 20px); /* ลด padding เพื่อให้พอดี */
+            width: calc(100% - 20px);
             padding: 12px 10px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 1.1em;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1.05em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
             -moz-appearance: textfield;
-            color: var(--primary-color); /* ให้ตัวเลขเด่นขึ้น */
+            color: var(--primary-color);
+            background-color: var(--result-bg);
         }
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
+        input[type="number"]::placeholder {
+            color: var(--placeholder-color);
+        }
         input[type="number"]:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25); /* เงาสีเดียวกับ primary */
+            box-shadow: 0 0 0 2px rgba(123, 82, 59, 0.15);
             outline: none;
+            background-color: #FFFFFF;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
         }
         button {
-            background-color: var(--primary-color);
+            background-color: var(--button-bg);
             color: white;
-            padding: 15px 25px;
+            padding: 14px 20px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.2em;
+            font-size: 1.15em;
             font-weight: 600;
             width: 100%;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        button:hover {
-            background-color: var(--button-hover);
-            transform: translateY(-2px);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0;
         }
         button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: var(--button-active-bg);
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
         }
+        #resetButton {
+            background-color: var(--reset-button-color);
+            flex-grow: 1;
+        }
+        #resetButton:active {
+            background-color: var(--reset-button-hover);
+        }
+
         #result {
             margin-top: 25px;
             padding: 18px;
             background-color: var(--result-bg);
             border-radius: 10px;
-            font-size: 1.25em;
             font-weight: 600;
             text-align: center;
             color: var(--primary-color);
-            border-left: 5px solid var(--result-border);
-            animation: slideIn 0.5s ease-out forwards;
+            border-left: 4px solid var(--result-border);
+            animation: fadeInResult 0.4s ease-out forwards;
             opacity: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-15px); }
-            to { opacity: 1; transform: translateX(0); }
+        #result .main-total {
+            font-size: 1.2em; /* Total sum is slightly larger */
+            margin-bottom: 8px;
+        }
+        #result .breakdown {
+            font-size: 0.9em; /* Breakdown details are smaller */
+            color: var(--detail-text-color);
+            text-align: left; /* Align breakdown text left */
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color); /* Subtle separator */
+        }
+        #result .breakdown div {
+            margin-bottom: 4px; /* Space between detail lines */
+            display: flex;
+            justify-content: space-between; /* Align name and value */
+        }
+        #result .breakdown div span:last-child {
+            font-weight: 500; /* Bold breakdown values */
+            color: var(--text-color);
+        }
+
+        @keyframes fadeInResult {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .error-message {
             color: var(--error-color);
-            font-size: 0.85em;
-            margin-top: 5px;
+            font-size: 0.8em;
+            margin-top: 4px;
             display: none;
+            font-weight: 400;
         }
         .tooltip {
             position: relative;
             display: inline-block;
+            margin-left: 4px;
+            color: var(--primary-color); /* Tooltip icon slightly darker */
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            font-size: 0.9em;
         }
         .tooltip .tooltiptext {
             visibility: hidden;
-            width: 180px; /* ปรับความกว้างให้เหมาะกับมือถือ */
+            width: 160px;
             background-color: var(--text-color);
             color: #fff;
             text-align: center;
             border-radius: 6px;
-            padding: 5px;
+            padding: 6px 8px;
             position: absolute;
-            z-index: 1;
-            bottom: 125%; 
+            z-index: 2;
+            bottom: 120%;
             left: 50%;
-            margin-left: -90px;
+            margin-left: -80px;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.2s ease;
             font-size: 0.8em;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
         }
         .tooltip .tooltiptext::after {
             content: "";
             position: absolute;
             top: 100%;
             left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
+            margin-left: -6px;
+            border-width: 6px;
             border-style: solid;
             border-color: var(--text-color) transparent transparent transparent;
         }
-        /* สำหรับหน้าจอสัมผัส: ทำให้ tooltip ปรากฏเมื่อแตะ */
         .tooltip.active .tooltiptext {
             visibility: visible;
             opacity: 1;
+            transform: translateY(0);
+        }
+        /* Current Date Info */
+        #currentDateInfo {
+            font-size: 0.85em;
+            color: var(--detail-text-color); /* Muted color for date info */
+            text-align: center;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            font-weight: 400;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>คำนวณเงินเดือน</h2>
+        <h2>เงินเดือนอันน้อยนิดจะได้เท่าไหร่</h2>
+        <div id="currentDateInfo"></div>
+
+        <div class="input-group">
+            <label for="baseDailyRate">
+                ต่อวันได้เท่าไหร่จ้ะ (บาท)
+                <span class="tooltip" onclick="toggleTooltip(this)">
+                    (?)
+                    <span class="tooltiptext">กรอกค่าแรงปกติที่คุณได้รับต่อวัน (เช่น 300, 400 บาท)</span>
+                </span>
+            </label>
+            <input type="number" id="baseDailyRate" value="400" min="0" placeholder="ค่าแรงต่อวัน" oninput="validateInput(this)">
+            <div class="error-message" id="baseDailyRateError"></div>
+        </div>
 
         <div class="input-group">
             <label for="monthDays">
-                จำนวนวันในเดือนนี้: 
+                เดือนนี้มีกี่วัน
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
-                    <span class="tooltiptext">กรอกจำนวนวันทั้งหมดในเดือนนี้ (เช่น ซัง, กัลป์, กุมาร, หยอกๆ)</span>
+                    <span class="tooltiptext">กรอกจำนวนวันทั้งหมดในเดือนนี้ (เช่น 28, 29, 30, 31)</span>
                 </span>
             </label>
-            <input type="number" id="monthDays" value="30" min="28" max="31" oninput="validateInput(this)">
+            <input type="number" id="monthDays" value="30" min="28" max="31" placeholder="วันในเดือน" oninput="validateInput(this)">
             <div class="error-message" id="monthDaysError"></div>
         </div>
         
         <div class="input-group">
             <label for="leaveDays">
-                จำนวนวันที่ลา (ลาบ่อยเกิ๊น): 
+                วันที่ลา (อดได้ตังไปดิ)
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
                     <span class="tooltiptext">วันที่ลาป่วย, ลากิจ, หรืออื่นๆ ที่คุณไม่ได้รับค่าจ้าง</span>
                 </span>
             </label>
-            <input type="number" id="leaveDays" value="0" min="0" oninput="validateInput(this)">
+            <input type="number" id="leaveDays" value="0" min="0" placeholder="จำนวนวันลา" oninput="validateInput(this)">
             <div class="error-message" id="leaveDaysError"></div>
         </div>
 
         <div class="input-group">
             <label for="runDays">
-                จำนวนวันที่มีวิ่งงาน (วันละ 500 🤤): 
+                วันที่มีวิ่งงาน (500ซังกุ๊)
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
-                    <span class="tooltiptext">วันที่คุณวิ่งงานพิเศษ ซึ่งจะได้ค่าจ้าง 500 บาท/วัน</span>
+                    <span class="tooltiptext">วันที่คุณวิ่งงานพิเศษ ซึ่งจะได้ค่าจ้าง 500 บาท/วัน (คงที่)</span>
                 </span>
             </label>
-            <input type="number" id="runDays" value="0" min="0" oninput="validateInput(this)">
+            <input type="number" id="runDays" value="0" min="0" placeholder="จำนวนวันวิ่งงาน" oninput="validateInput(this)">
             <div class="error-message" id="runDaysError"></div>
         </div>
 
         <div class="input-group">
             <label for="halfDays">
-                จำนวนวันทำงานครึ่งวัน (วันละ 200 บาท): 
+                วันทำงานครึ่งวัน
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
-                    <span class="tooltiptext">วันที่คุณทำงานเพียงครึ่งวัน ซึ่งจะได้ค่าจ้าง 200 บาท/วัน</span>
+                    <span class="tooltiptext">วันที่คุณทำงานเพียงครึ่งวัน ซึ่งจะได้ค่าจ้างครึ่งหนึ่งของค่าแรงพื้นฐานต่อวัน</span>
                 </span>
             </label>
-            <input type="number" id="halfDays" value="0" min="0" oninput="validateInput(this)">
+            <input type="number" id="halfDays" value="0" min="0" placeholder="จำนวนวันครึ่งวัน" oninput="validateInput(this)">
             <div class="error-message" id="halfDaysError"></div>
         </div>
 
-        <button onclick="calculateSalary()">คำนวณเงินเดือน!</button>
+        <div class="button-group">
+            <button onclick="calculateSalary()">คำนวณเงินเดือน!</button>
+            <button id="resetButton" onclick="resetForm()">รีเซ็ต</button>
+        </div>
 
         <div id="result">
-            เงินเดือนที่คาดว่าจะได้รับ: 0 บาท
+            <div class="main-total">เดือนนี้มึงได้: 0 บาท</div>
         </div>
     </div>
 
     <script>
-        // สำหรับมือถือ: เมื่อแตะที่ (?) จะสลับการแสดง tooltip
+        // --- UX/UI Enhancements for Mobile ---
         function toggleTooltip(element) {
+            document.querySelectorAll('.tooltip.active').forEach(openTooltip => {
+                if (openTooltip !== element) {
+                    openTooltip.classList.remove('active');
+                }
+            });
             element.classList.toggle('active');
         }
 
-        // ปิด tooltip เมื่อแตะที่อื่น (สำหรับมือถือ)
         document.addEventListener('click', function(event) {
             document.querySelectorAll('.tooltip').forEach(tooltip => {
                 if (!tooltip.contains(event.target)) {
@@ -237,23 +322,30 @@
             });
         });
 
-
+        // --- Core Logic ---
         function validateInput(inputElement) {
-            const min = parseInt(inputElement.min);
-            const max = parseInt(inputElement.max);
-            const value = parseInt(inputElement.value);
+            const min = parseFloat(inputElement.min);
+            const max = parseFloat(inputElement.max);
+            const value = parseFloat(inputElement.value);
             const errorElement = document.getElementById(inputElement.id + 'Error');
 
-            if (inputElement.id === 'monthDays') {
+            if (inputElement.id === 'baseDailyRate') {
+                if (value < 0 || isNaN(value)) {
+                    errorElement.innerText = `ค่าแรงพื้นฐานต้องไม่ติดลบ`;
+                    errorElement.style.display = 'block';
+                } else {
+                    errorElement.style.display = 'none';
+                }
+            } else if (inputElement.id === 'monthDays') {
                 if (value < min || value > max || isNaN(value)) {
-                    errorElement.innerText = `โปรดระบุจำนวนวันในเดือนระหว่าง ${min}-${max} วัน`;
+                    errorElement.innerText = `วันในเดือนต้องอยู่ระหว่าง ${min}-${max} วัน`;
                     errorElement.style.display = 'block';
                 } else {
                     errorElement.style.display = 'none';
                 }
             } else { // For leaveDays, runDays, halfDays
                 if (value < min || isNaN(value)) {
-                    errorElement.innerText = `โปรดระบุจำนวนวันอย่างน้อย ${min} วัน`;
+                    errorElement.innerText = `ต้องมีจำนวนวันอย่างน้อย ${min} วัน`;
                     errorElement.style.display = 'block';
                 } else {
                     errorElement.style.display = 'none';
@@ -262,73 +354,199 @@
         }
 
         function calculateSalary() {
+            const baseDailyRate = parseFloat(document.getElementById('baseDailyRate').value);
             const monthDays = parseInt(document.getElementById('monthDays').value);
             const leaveDays = parseInt(document.getElementById('leaveDays').value);
             const runDays = parseInt(document.getElementById('runDays').value);
             const halfDays = parseInt(document.getElementById('halfDays').value);
             const resultDisplay = document.getElementById('result');
 
-            const baseDailyRate = 400;
             const runDailyRate = 500;
-            const halfDailyRate = 200;
-            const maxNormalDaysForBaseSalary = 30;
+            const maxNormalDaysForBaseSalary = 30; 
 
-            // ปิด tooltip ทั้งหมดเมื่อคำนวณ
             document.querySelectorAll('.tooltip').forEach(tooltip => {
                 tooltip.classList.remove('active');
             });
 
+            let isValid = true;
+            if (isNaN(baseDailyRate) || baseDailyRate < 0) {
+                document.getElementById('baseDailyRateError').innerText = "กรุณากรอกค่าแรงพื้นฐานที่ถูกต้อง";
+                document.getElementById('baseDailyRateError').style.display = 'block';
+                isValid = false;
+            } else { document.getElementById('baseDailyRateError').style.display = 'none'; }
 
-            // Validate inputs
-            if (isNaN(monthDays) || isNaN(leaveDays) || isNaN(runDays) || isNaN(halfDays) ||
-                leaveDays < 0 || runDays < 0 || halfDays < 0 || monthDays < 28 || monthDays > 31) {
-                
-                resultDisplay.innerText = "โปรดกรอกข้อมูลให้ถูกต้องครบถ้วน!";
+            if (isNaN(monthDays) || monthDays < 28 || monthDays > 31) {
+                document.getElementById('monthDaysError').innerText = "จำนวนวันในเดือนต้องอยู่ระหว่าง 28-31 วัน";
+                document.getElementById('monthDaysError').style.display = 'block';
+                isValid = false;
+            } else { document.getElementById('monthDaysError').style.display = 'none'; }
+
+            if (isNaN(leaveDays) || leaveDays < 0) {
+                document.getElementById('leaveDaysError').innerText = "จำนวนวันลาต้องไม่ติดลบ";
+                document.getElementById('leaveDaysError').style.display = 'block';
+                isValid = false;
+            } else { document.getElementById('leaveDaysError').style.display = 'none'; }
+
+            if (isNaN(runDays) || runDays < 0) {
+                document.getElementById('runDaysError').innerText = "จำนวนวันวิ่งงานต้องไม่ติดลบ";
+                document.getElementById('runDaysError').style.display = 'block';
+                isValid = false;
+            } else { document.getElementById('runDaysError').style.display = 'none'; }
+            
+            if (isNaN(halfDays) || halfDays < 0) {
+                document.getElementById('halfDaysError').innerText = "จำนวนวันครึ่งวันต้องไม่ติดลบ";
+                document.getElementById('halfDaysError').style.display = 'block';
+                isValid = false;
+            } else { document.getElementById('halfDaysError').style.display = 'none'; }
+
+            if (!isValid) {
+                resultDisplay.innerHTML = `<div class="main-total">⚠️ **โปรดแก้ไขข้อมูลที่ผิดพลาด!**</div>`;
                 resultDisplay.style.backgroundColor = 'var(--error-color)';
                 resultDisplay.style.color = 'white';
-                resultDisplay.style.borderLeft = '5px solid red';
-                resultDisplay.style.opacity = 1;
-                resultDisplay.style.transform = 'translateX(0)';
+                resultDisplay.style.borderLeft = '4px solid #B03A2E';
+                triggerResultAnimation(resultDisplay);
                 return;
             }
 
-            const totalSpecialDays = leaveDays + runDays + halfDays;
-            if (totalSpecialDays > monthDays) {
-                resultDisplay.innerText = "วันลา, วันวิ่งงาน, และวันทำงานครึ่งวันรวมกันต้องไม่เกินจำนวนวันในเดือน!";
+            const totalActiveDays = leaveDays + runDays + halfDays;
+            if (totalActiveDays > monthDays) {
+                resultDisplay.innerHTML = `<div class="main-total">⚠️ **วันลา, วันวิ่งงาน, และครึ่งวันรวมกันต้องไม่เกินวันในเดือน!**</div>`;
                 resultDisplay.style.backgroundColor = 'var(--error-color)';
                 resultDisplay.style.color = 'white';
-                resultDisplay.style.borderLeft = '5px solid red';
-                resultDisplay.style.opacity = 1;
-                resultDisplay.style.transform = 'translateX(0)';
+                resultDisplay.style.borderLeft = '4px solid #B03A2E';
+                triggerResultAnimation(resultDisplay);
                 return;
             }
 
+            // --- Calculation Logic ---
             let salary = 0;
+            const halfDailyRate = baseDailyRate / 2; 
 
             const runWorkSalary = runDays * runDailyRate;
             const halfWorkSalary = halfDays * halfDailyRate;
             
             let normalWorkDays = monthDays - leaveDays - runDays - halfDays;
+            let normalWorkSalary = 0;
 
             if (monthDays === 31 && normalWorkDays > maxNormalDaysForBaseSalary) {
-                salary = (maxNormalDaysForBaseSalary * baseDailyRate) + ((normalWorkDays - maxNormalDaysForBaseSalary) * baseDailyRate);
+                normalWorkSalary = (maxNormalDaysForBaseSalary * baseDailyRate) + ((normalWorkDays - maxNormalDaysForBaseSalary) * baseDailyRate);
             } else {
-                salary = (normalWorkDays * baseDailyRate);
+                normalWorkSalary = (normalWorkDays * baseDailyRate);
             }
             
-            salary += runWorkSalary + halfWorkSalary;
+            salary = normalWorkSalary + runWorkSalary + halfWorkSalary;
 
-            resultDisplay.innerText = `🎉 เงินเดือนที่คาดว่าจะได้รับ: ${salary.toLocaleString()} บาท`;
+            // Save data to Local Storage (excluding monthDays as it's auto-detected)
+            saveData({
+                baseDailyRate: baseDailyRate,
+                leaveDays: leaveDays,
+                runDays: runDays,
+                halfDays: halfDays
+            });
+
+            // Display Result with Breakdown
+            let breakdownHTML = `
+                <div class="main-total">🎉 **เงินเดือนที่คาดว่าจะได้รับ:**<br>${salary.toLocaleString()} บาท</div>
+                <div class="breakdown">
+                    <div><span>ค่าแรงปกติ (${normalWorkDays} วัน):</span> <span>${normalWorkSalary.toLocaleString()} บาท</span></div>
+                    <div><span>ค่าวิ่งงาน (${runDays} วัน):</span> <span>${runWorkSalary.toLocaleString()} บาท</span></div>
+                    <div><span>ค่าทำงานครึ่งวัน (${halfDays} วัน):</span> <span>${halfWorkSalary.toLocaleString()} บาท</span></div>
+                </div>
+            `;
+            resultDisplay.innerHTML = breakdownHTML;
             resultDisplay.style.backgroundColor = 'var(--result-bg)';
             resultDisplay.style.color = 'var(--primary-color)';
-            resultDisplay.style.borderLeft = '5px solid var(--result-border)';
-            resultDisplay.style.opacity = 0;
-            resultDisplay.style.transform = 'translateX(-15px)';
-            setTimeout(() => {
-                resultDisplay.style.opacity = 1;
-                resultDisplay.style.transform = 'translateX(0)';
-            }, 50); 
+            resultDisplay.style.borderLeft = '4px solid var(--result-border)';
+            triggerResultAnimation(resultDisplay);
         }
+
+        // Helper function for result animation
+        function triggerResultAnimation(element) {
+            element.style.opacity = 0;
+            element.style.transform = 'translateY(10px)';
+            void element.offsetWidth; // Force reflow/repaint
+            element.style.opacity = 1;
+            element.style.transform = 'translateY(0)';
+        }
+
+        // --- New Features ---
+
+        // 1. Auto-detect current month days
+        function autoSetMonthDays() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth() + 1; // Month is 0-indexed
+            const daysInMonth = new Date(year, month, 0).getDate(); // Get last day of current month
+
+            document.getElementById('monthDays').value = daysInMonth;
+
+            // Display current date info
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", 
+                                "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const currentMonthName = monthNames[today.getMonth()];
+            document.getElementById('currentDateInfo').innerText = `เดือน${currentMonthName}มี ${daysInMonth} วัน`;
+        }
+
+        // 2. Save data to Local Storage
+        function saveData(data) {
+            try {
+                localStorage.setItem('salaryCalcData', JSON.stringify(data));
+            } catch (e) {
+                console.error("Error saving to local storage:", e);
+            }
+        }
+
+        // 3. Load data from Local Storage
+        function loadData() {
+            try {
+                const storedData = localStorage.getItem('salaryCalcData');
+                if (storedData) {
+                    const data = JSON.parse(storedData);
+                    // Only load if value exists in stored data, otherwise use default
+                    document.getElementById('baseDailyRate').value = data.baseDailyRate !== undefined ? data.baseDailyRate : 400;
+                    document.getElementById('leaveDays').value = data.leaveDays !== undefined ? data.leaveDays : 0;
+                    document.getElementById('runDays').value = data.runDays !== undefined ? data.runDays : 0;
+                    document.getElementById('halfDays').value = data.halfDays !== undefined ? data.halfDays : 0;
+                }
+            } catch (e) {
+                console.error("Error loading from local storage:", e);
+            }
+        }
+
+        // 4. Reset Form
+        function resetForm() {
+            document.getElementById('baseDailyRate').value = 400;
+            document.getElementById('leaveDays').value = 0;
+            document.getElementById('runDays').value = 0;
+            document.getElementById('halfDays').value = 0;
+            autoSetMonthDays(); // Reset month days to current month
+
+            // Clear result and error messages
+            document.getElementById('result').innerHTML = `<div class="main-total">เงินเดือนที่คาดว่าจะได้รับ: 0 บาท</div>`;
+            document.getElementById('result').style.backgroundColor = 'var(--result-bg)';
+            document.getElementById('result').style.color = 'var(--primary-color)';
+            document.getElementById('result').style.borderLeft = '4px solid var(--result-border)';
+            
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            
+            // Clear local storage data for these fields
+            saveData({
+                baseDailyRate: 400,
+                leaveDays: 0,
+                runDays: 0,
+                halfDays: 0
+            });
+            
+            triggerResultAnimation(document.getElementById('result')); // Trigger animation for reset
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData(); // Load saved data first
+            autoSetMonthDays(); // Then set current month days (overwrites monthDays from saved data)
+            // Initial calculation to display 0 baht on load, or calculated based on loaded/autofilled data
+            calculateSalary(); 
+        });
     </script>
 </body>
 </html>
