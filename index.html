@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คำนวณเงินเดือน (Earth Tone)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8B4513; /* Saddle Brown */
+            --secondary-color: #D2B48C; /* Tan */
+            --background-color: #F5DEB3; /* Wheat */
+            --card-background: #FFFFFF;
+            --text-color: #4F4F4F; /* Dim Gray */
+            --border-color: #B08D57; /* Dark Goldenrod */
+            --button-hover: #A0522D; /* Sienna */
+            --result-bg: #FFF8DC; /* Cornsilk */
+            --result-border: #CD853F; /* Peru */
+            --error-color: #DC3545; /* Red */
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            padding: 15px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* จัดให้อยู่ด้านบนเมื่อจอเล็ก */
+            min-height: 100vh;
+            margin: 0;
+            box-sizing: border-box; /* ให้ padding ไม่ดันเกินจอ */
+        }
+        .container {
+            background-color: var(--card-background);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px; /* จำกัดความกว้างให้เหมาะกับมือถือ */
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 1.8em; /* ขนาดใหญ่ขึ้นสำหรับมือถือ */
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 400;
+            color: var(--text-color);
+            font-size: 1em;
+        }
+        input[type="number"] {
+            width: calc(100% - 20px); /* ลด padding เพื่อให้พอดี */
+            padding: 12px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            -moz-appearance: textfield;
+            color: var(--primary-color); /* ให้ตัวเลขเด่นขึ้น */
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25); /* เงาสีเดียวกับ primary */
+            outline: none;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #result {
+            margin-top: 25px;
+            padding: 18px;
+            background-color: var(--result-bg);
+            border-radius: 10px;
+            font-size: 1.25em;
+            font-weight: 600;
+            text-align: center;
+            color: var(--primary-color);
+            border-left: 5px solid var(--result-border);
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-15px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 180px; /* ปรับความกว้างให้เหมาะกับมือถือ */
+            background-color: var(--text-color);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; 
+            left: 50%;
+            margin-left: -90px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8em;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-color) transparent transparent transparent;
+        }
+        /* สำหรับหน้าจอสัมผัส: ทำให้ tooltip ปรากฏเมื่อแตะ */
+        .tooltip.active .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💰 คำนวณเงินเดือน</h2>
+
+        <div class="input-group">
+            <label for="monthDays">
+                จำนวนวันในเดือนนี้: 
+                <span class="tooltip" onclick="toggleTooltip(this)">
+                    (?)
+                    <span class="tooltiptext">กรอกจำนวนวันทั้งหมดในเดือนนี้ (เช่น 28, 29, 30, 31)</span>
+                </span>
+            </label>
+            <input type="number" id="monthDays" value="30" min="28" max="31" oninput="validateInput(this)">
+            <div class="error-message" id="monthDaysError"></div>
+        </div>
+        
+        <div class="input-group">
+            <label for="leaveDays">
+                จำนวนวันที่ลา (ไม่ได้รับเงิน): 
+                <span class="tooltip" onclick="toggleTooltip(this)">
+                    (?)
+                    <span class="tooltiptext">วันที่ลาป่วย, ลากิจ, หรืออื่นๆ ที่คุณไม่ได้รับค่าจ้าง</span>
+                </span>
+            </label>
+            <input type="number" id="leaveDays" value="0" min="0" oninput="validateInput(this)">
+            <div class="error-message" id="leaveDaysError"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="runDays">
+                จำนวนวันที่มีวิ่งงาน (วันละ 500 บาท): 
+                <span class="tooltip" onclick="toggleTooltip(this)">
+                    (?)
+                    <span class="tooltiptext">วันที่คุณวิ่งงานพิเศษ ซึ่งจะได้ค่าจ้าง 500 บาท/วัน</span>
+                </span>
+            </label>
+            <input type="number" id="runDays" value="0" min="0" oninput="validateInput(this)">
+            <div class="error-message" id="runDaysError"></div>
+        </div>
+
+        <div class="input-group">
+            <label for="halfDays">
+                จำนวนวันทำงานครึ่งวัน (วันละ 200 บาท): 
+                <span class="tooltip" onclick="toggleTooltip(this)">
+                    (?)
+                    <span class="tooltiptext">วันที่คุณทำงานเพียงครึ่งวัน ซึ่งจะได้ค่าจ้าง 200 บาท/วัน</span>
+                </span>
+            </label>
+            <input type="number" id="halfDays" value="0" min="0" oninput="validateInput(this)">
+            <div class="error-message" id="halfDaysError"></div>
+        </div>
+
+        <button onclick="calculateSalary()">คำนวณเงินเดือน!</button>
+
+        <div id="result">
+            เงินเดือนที่คาดว่าจะได้รับ: 0 บาท
+        </div>
+    </div>
+
+    <script>
+        // สำหรับมือถือ: เมื่อแตะที่ (?) จะสลับการแสดง tooltip
+        function toggleTooltip(element) {
+            element.classList.toggle('active');
+        }
+
+        // ปิด tooltip เมื่อแตะที่อื่น (สำหรับมือถือ)
+        document.addEventListener('click', function(event) {
+            document.querySelectorAll('.tooltip').forEach(tooltip => {
+                if (!tooltip.contains(event.target)) {
+                    tooltip.classList.remove('active');
+                }
+            });
+        });
+
+
+        function validateInput(inputElement) {
+            const min = parseInt(inputElement.min);
+            const max = parseInt(inputElement.max);
+            const value = parseInt(inputElement.value);
+            const errorElement = document.getElementById(inputElement.id + 'Error');
+
+            if (inputElement.id === 'monthDays') {
+                if (value < min || value > max || isNaN(value)) {
+                    errorElement.innerText = `โปรดระบุจำนวนวันในเดือนระหว่าง ${min}-${max} วัน`;
+                    errorElement.style.display = 'block';
+                } else {
+                    errorElement.style.display = 'none';
+                }
+            } else { // For leaveDays, runDays, halfDays
+                if (value < min || isNaN(value)) {
+                    errorElement.innerText = `โปรดระบุจำนวนวันอย่างน้อย ${min} วัน`;
+                    errorElement.style.display = 'block';
+                } else {
+                    errorElement.style.display = 'none';
+                }
+            }
+        }
+
+        function calculateSalary() {
+            const monthDays = parseInt(document.getElementById('monthDays').value);
+            const leaveDays = parseInt(document.getElementById('leaveDays').value);
+            const runDays = parseInt(document.getElementById('runDays').value);
+            const halfDays = parseInt(document.getElementById('halfDays').value);
+            const resultDisplay = document.getElementById('result');
+
+            const baseDailyRate = 400;
+            const runDailyRate = 500;
+            const halfDailyRate = 200;
+            const maxNormalDaysForBaseSalary = 30;
+
+            // ปิด tooltip ทั้งหมดเมื่อคำนวณ
+            document.querySelectorAll('.tooltip').forEach(tooltip => {
+                tooltip.classList.remove('active');
+            });
+
+
+            // Validate inputs
+            if (isNaN(monthDays) || isNaN(leaveDays) || isNaN(runDays) || isNaN(halfDays) ||
+                leaveDays < 0 || runDays < 0 || halfDays < 0 || monthDays < 28 || monthDays > 31) {
+                
+                resultDisplay.innerText = "โปรดกรอกข้อมูลให้ถูกต้องครบถ้วน!";
+                resultDisplay.style.backgroundColor = 'var(--error-color)';
+                resultDisplay.style.color = 'white';
+                resultDisplay.style.borderLeft = '5px solid red';
+                resultDisplay.style.opacity = 1;
+                resultDisplay.style.transform = 'translateX(0)';
+                return;
+            }
+
+            const totalSpecialDays = leaveDays + runDays + halfDays;
+            if (totalSpecialDays > monthDays) {
+                resultDisplay.innerText = "วันลา, วันวิ่งงาน, และวันทำงานครึ่งวันรวมกันต้องไม่เกินจำนวนวันในเดือน!";
+                resultDisplay.style.backgroundColor = 'var(--error-color)';
+                resultDisplay.style.color = 'white';
+                resultDisplay.style.borderLeft = '5px solid red';
+                resultDisplay.style.opacity = 1;
+                resultDisplay.style.transform = 'translateX(0)';
+                return;
+            }
+
+            let salary = 0;
+
+            const runWorkSalary = runDays * runDailyRate;
+            const halfWorkSalary = halfDays * halfDailyRate;
+            
+            let normalWorkDays = monthDays - leaveDays - runDays - halfDays;
+
+            if (monthDays === 31 && normalWorkDays > maxNormalDaysForBaseSalary) {
+                salary = (maxNormalDaysForBaseSalary * baseDailyRate) + ((normalWorkDays - maxNormalDaysForBaseSalary) * baseDailyRate);
+            } else {
+                salary = (normalWorkDays * baseDailyRate);
+            }
+            
+            salary += runWorkSalary + halfWorkSalary;
+
+            resultDisplay.innerText = `🎉 เงินเดือนที่คาดว่าจะได้รับ: ${salary.toLocaleString()} บาท`;
+            resultDisplay.style.backgroundColor = 'var(--result-bg)';
+            resultDisplay.style.color = 'var(--primary-color)';
+            resultDisplay.style.borderLeft = '5px solid var(--result-border)';
+            resultDisplay.style.opacity = 0;
+            resultDisplay.style.transform = 'translateX(-15px)';
+            setTimeout(() => {
+                resultDisplay.style.opacity = 1;
+                resultDisplay.style.transform = 'translateX(0)';
+            }, 50); 
+        }
+    </script>
+</body>
+</html>
