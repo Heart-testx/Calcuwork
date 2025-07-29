@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>เดือนนี้จะได้เท่าไหร่น้อ</title>
+    <title>Salary Calc (Detailed)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -230,12 +230,12 @@
 </head>
 <body>
     <div class="container">
-        <h2>เงินเดือนอันน้อยนิดจะได้เท่าไหร่</h2>
+        <h2>เดือนนี้ได้เท่าไหร่?</h2>
         <div id="currentDateInfo"></div>
 
         <div class="input-group">
             <label for="baseDailyRate">
-                ต่อวันได้เท่าไหร่จ้ะ (บาท)
+                ต่อวันได้เท่าไหร่ (บาท)
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
                     <span class="tooltiptext">กรอกค่าแรงปกติที่คุณได้รับต่อวัน (เช่น 300, 400 บาท)</span>
@@ -247,19 +247,19 @@
 
         <div class="input-group">
             <label for="monthDays">
-                เดือนนี้มีกี่วัน
+                จำนวนวันในเดือนนี้
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
-                    <span class="tooltiptext">กรอกจำนวนวันทั้งหมดในเดือนนี้ (เช่น 28, 29, 30, 31)</span>
+                    <span class="tooltiptext">กรอกจำนวนวันทั้งหมดในเดือนนี้ </span>
                 </span>
             </label>
-            <input type="number" id="monthDays" value="30" min="28" max="31" placeholder="วันในเดือน" oninput="validateInput(this)">
+            <input type="number" id="monthDays" value="30" min="28" max="31" placeholder="ซังกัลป์" oninput="validateInput(this)">
             <div class="error-message" id="monthDaysError"></div>
         </div>
         
         <div class="input-group">
             <label for="leaveDays">
-                วันที่ลา (อดได้ตังไปดิ)
+                วันที่ลา (ไม่ได้รับเงิน)
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
                     <span class="tooltiptext">วันที่ลาป่วย, ลากิจ, หรืออื่นๆ ที่คุณไม่ได้รับค่าจ้าง</span>
@@ -271,7 +271,7 @@
 
         <div class="input-group">
             <label for="runDays">
-                วันที่มีวิ่งงาน (500ซังกุ๊)
+                วันที่มีวิ่งงาน (วันละ 500 บาท)
                 <span class="tooltip" onclick="toggleTooltip(this)">
                     (?)
                     <span class="tooltiptext">วันที่คุณวิ่งงานพิเศษ ซึ่งจะได้ค่าจ้าง 500 บาท/วัน (คงที่)</span>
@@ -299,7 +299,7 @@
         </div>
 
         <div id="result">
-            <div class="main-total">เดือนนี้มึงได้: 0 บาท</div>
+            <div class="main-total">เงินเดือนที่คาดว่าจะได้รับ: 0 บาท</div>
         </div>
     </div>
 
@@ -446,7 +446,7 @@
 
             // Display Result with Breakdown
             let breakdownHTML = `
-                <div class="main-total">🎉 **เงินเดือนที่คาดว่าจะได้รับ:**<br>${salary.toLocaleString()} บาท</div>
+                <div class="main-total">เดือนนี้มึงได้:<br>${salary.toLocaleString()} บาท</div>
                 <div class="breakdown">
                     <div><span>ค่าแรงปกติ (${normalWorkDays} วัน):</span> <span>${normalWorkSalary.toLocaleString()} บาท</span></div>
                     <div><span>ค่าวิ่งงาน (${runDays} วัน):</span> <span>${runWorkSalary.toLocaleString()} บาท</span></div>
